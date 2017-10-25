@@ -1,21 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net"
 	"net/http"
 )
 
 func main() {
-	l, err := net.Listen("tcp", "127.0.0.1:8080")
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Start Goran HTTP Server")
-	fmt.Printf("http://%s", l.Addr())
+    http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request){
+        log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+        http.ServeFile(w, r, "."+r.URL.Path)
+    })
 
-	http.Serve(l, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "."+r.URL.Path)
-	}))
+    log.Printf("Start Goran HTTP Server")
+    addr := "127.0.0.1:8080"
+    log.Printf("http://%s", addr)
+    err := http.ListenAndServe(addr, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
 }
