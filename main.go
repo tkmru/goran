@@ -17,12 +17,13 @@ func init() {
 	const defaultAddr = "127.0.0.1"
 	flag.StringVar(&addr, "address", defaultAddr, "address to use")
 	flag.StringVar(&addr, "a", defaultAddr, "address to use (short)")
-	flag.Parse()
 }
 
 func main() {
+    flag.Parse()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+        w.Header().Add("Cache-Control", "no-store")
 		http.ServeFile(w, r, "."+r.URL.Path)
 	})
 
