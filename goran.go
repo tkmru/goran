@@ -6,10 +6,10 @@ import (
     "log"
     "net/http"
     "os"
-    //"github.com/BurntSushi/toml"
+    "github.com/BurntSushi/toml"
 )
 
-var port int
+var port uint
 var addr string
 var configPath string
 
@@ -21,29 +21,31 @@ func usage() {
 
 func init() {
     const defaultPort = 8888
-    flag.IntVar(&port, "port", defaultPort, "port to use")
-    flag.IntVar(&port, "p", defaultPort, "port to use (short)")
+    flag.UintVar(&port, "port", defaultPort, "port to use")
+    flag.UintVar(&port, "p", defaultPort, "port to use (short)")
 
     const defaultAddr = "127.0.0.1"
     flag.StringVar(&addr, "address", defaultAddr, "address to use")
     flag.StringVar(&addr, "a", defaultAddr, "address to use (short)")
 
     const defaultConfig = ""
-    flag.StringVar(&configPath, "config", defaultConfig, "address to use")
-    flag.StringVar(&configPath, "c", defaultConfig, "address to use (short)")
+    flag.StringVar(&configPath, "config", defaultConfig, "config path to use")
+    flag.StringVar(&configPath, "c", defaultConfig, "config path to use (short)")
     flag.Usage = func() { usage() }
 }
 
-func isExist(filename string) bool {
-    _, err := os.Stat(filename)
-    return err == nil
+
+type Config struct {
+    Port uint
+    Addr string
 }
 
 func main() {
     flag.Parse()
+    var config Config
     if configPath != "" {
-        if !isExist(configPath) {
-            log.Panic("Config file not found.")
+        if _, err := toml.DecodeFile(configPath, &config); err != nil {
+            log.Panic(err)
         }
     }
 
@@ -56,8 +58,7 @@ func main() {
     log.Printf("Start Goran HTTP Server")
     addr = fmt.Sprintf("%s:%d", addr, port)
     log.Printf("http://%s", addr)
-    err := http.ListenAndServe(addr, nil)
-    if err != nil {
+    if err := http.ListenAndServe(addr, nil); err != nil {
         log.Fatal(err)
     }
 }
