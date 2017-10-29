@@ -47,6 +47,9 @@ func main() {
         if _, err := toml.DecodeFile(configPath, &config); err != nil {
             log.Panic(err)
         }
+
+        port = config.Port
+        addr = config.Addr
     }
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +62,6 @@ func main() {
     addr = fmt.Sprintf("%s:%d", addr, port)
     log.Printf("http://%s", addr)
     if err := http.ListenAndServe(addr, nil); err != nil {
-        log.Fatal(err)
+        log.Panic(err)
     }
 }
