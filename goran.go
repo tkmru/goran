@@ -50,10 +50,11 @@ func main() {
 
         port = config.Port
         addr = config.Addr
+        log.Printf("Load %s file...\n", configPath)
     }
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+        log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
         w.Header().Add("Cache-Control", "no-store")
         http.ServeFile(w, r, "."+r.URL.Path)
     })
