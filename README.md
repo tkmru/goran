@@ -31,6 +31,14 @@ $ goran
 2017/10/26 00:36:15 127.0.0.1:57981 GET /favicon.ico
 ```
 
+### Configuration file
+goran is configured with a simple [TOML](https://github.com/toml-lang/toml) file.
+
+```
+Port = 6000
+Addr = "127.0.0.1"
+```
+
 ## License
 
 MIT License
