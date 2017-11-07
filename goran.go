@@ -63,11 +63,7 @@ func main() {
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
         w.Header().Add("Cache-Control", "no-store")
-        if rootDir == "" {
-            http.ServeFile(w, r, "./")
-        } else {
-            http.ServeFile(w, r, rootDir)
-        }
+        http.ServeFile(w, r, "./")
     })
 
     log.Printf("Starting Goran HTTP Server")
