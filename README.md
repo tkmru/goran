@@ -16,19 +16,27 @@ Usage:
         address to use (short) (default "127.0.0.1")
   -address string
         address to use (default "127.0.0.1")
-  -p int
+  -c string
+        config path to use (short)
+  -config string
+        config path to use
+  -p uint
         port to use (short) (default 8888)
-  -port int
+  -port uint
         port to use (default 8888)
+  -r string
+        root directory to use (short) (default "./")
+  -root string
+        root directory to use (default "./")
 ```
 
 ```
 $ cd DOCUMENT_ROOT
 $ goran
-2017/10/26 00:35:56 Start Goran HTTP Server
-2017/10/26 00:35:56 http://127.0.0.1:8888
-2017/10/26 00:36:15 127.0.0.1:57981 GET /
-2017/10/26 00:36:15 127.0.0.1:57981 GET /favicon.ico
+2017/11/07 23:22:29 Starting Goran HTTP Server
+2017/11/07 23:22:29 Listen : http://127.0.0.1:8888
+2017/11/07 23:22:29 RootDir: ./
+2017/11/07 23:22:38 127.0.0.1:65208 GET /
 ```
 
 ### Configuration file
@@ -37,6 +45,7 @@ goran is configured with a simple [TOML](https://github.com/toml-lang/toml) file
 ```
 Port = 6000
 Addr = "127.0.0.1"
+rootDir = "/var/www/hoge"
 ```
 
 ## License
