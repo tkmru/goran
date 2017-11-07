@@ -11,6 +11,7 @@ import (
 
 var port uint
 var addr string
+var rootDir string
 var configPath string
 
 func usage() {
@@ -28,6 +29,10 @@ func init() {
     flag.StringVar(&addr, "address", defaultAddr, "address to use")
     flag.StringVar(&addr, "a", defaultAddr, "address to use (short)")
 
+    const defaultRootDir = "./"
+    flag.StringVar(&rootDir, "root", defaultRootDir, "root directory to use")
+    flag.StringVar(&rootDir, "r", defaultRootDir, "root directory to use (short)")
+
     const defaultConfig = ""
     flag.StringVar(&configPath, "config", defaultConfig, "config path to use")
     flag.StringVar(&configPath, "c", defaultConfig, "config path to use (short)")
@@ -38,6 +43,7 @@ func init() {
 type Config struct {
     Port uint
     Addr string
+    rootDir string
 }
 
 func main() {
@@ -50,18 +56,25 @@ func main() {
 
         port = config.Port
         addr = config.Addr
+        rootDir = config.rootDir
         log.Printf("Load %s file...\n", configPath)
     }
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
         w.Header().Add("Cache-Control", "no-store")
-        http.ServeFile(w, r, "."+r.URL.Path)
+        if rootDir == "" {
+            http.ServeFile(w, r, "./")
+        } else {
+            http.ServeFile(w, r, rootDir)
+        }
     })
 
-    log.Printf("Start Goran HTTP Server")
+    log.Printf("Starting Goran HTTP Server")
     addr = fmt.Sprintf("%s:%d", addr, port)
-    log.Printf("http://%s", addr)
+    log.Printf("Listen : http://%s", addr)
+    log.Printf("RootDir: %s", rootDir)
+
     if err := http.ListenAndServe(addr, nil); err != nil {
         log.Panic(err)
     }
